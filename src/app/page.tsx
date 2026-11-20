@@ -66,28 +66,8 @@ export default function HomeDashboard() {
   const [loadingAssistant, setLoadingAssistant] = useState(false);
   const [activeTab, setActiveTab] = useState<"routine" | "hacks" | "impact">("routine");
 
-  // Fetch AQI
-  const loadAQI = async (cityObj: { name: string; lat?: number; lon?: number; country?: string }) => {
-    setLoadingAqi(true);
-    try {
-      const query = cityObj.lat && cityObj.lon 
-        ? `lat=${cityObj.lat}&lon=${cityObj.lon}&city=${encodeURIComponent(cityObj.name)}`
-        : `city=${encodeURIComponent(cityObj.name)}`;
-      
-      const res = await fetch(`/api/aqi?${query}`);
-      const data: AQIData = await res.json();
-      setAqiData(data);
-      // Auto-trigger advice when city changes
-      generateRecommendations(data);
-    } catch (e) {
-      console.error("Failed to load AQI", e);
-    } finally {
-      setLoadingAqi(false);
-    }
-  };
-
   // Generate Assistant Advice
-  const generateRecommendations = async (currentAqi: AQIData | null = aqiData) => {
+  const generateRecommendations = React.useCallback(async (currentAqi: AQIData | null = aqiData) => {
     const targetAqi = currentAqi || aqiData || {
       location: selectedCity.name,
       country: selectedCity.country,
@@ -143,11 +123,46 @@ export default function HomeDashboard() {
     } finally {
       setLoadingAssistant(false);
     }
-  };
+  }, [aqiData, selectedCity, hasKids, hasElderly, hasAsthma, petOwner, commuteMode, userQuery]);
+
+  // Fetch AQI
+  const loadAQI = React.useCallback(async (cityObj: { name: string; lat?: number; lon?: number; country?: string }) => {
+    setLoadingAqi(true);
+    try {
+      const query = cityObj.lat && cityObj.lon 
+        ? `lat=${cityObj.lat}&lon=${cityObj.lon}&city=${encodeURIComponent(cityObj.name)}`
+        : `city=${encodeURIComponent(cityObj.name)}`;
+      
+      const res = await fetch(`/api/aqi?${query}`);
+      const data: AQIData = await res.json();
+      setAqiData(data);
+      generateRecommendations(data);
+    } catch (e) {
+      console.error("Failed to load AQI", e);
+    } finally {
+      setLoadingAqi(false);
+    }
+  }, [generateRecommendations]);
 
   useEffect(() => {
-    loadAQI(selectedCity);
-  }, []);
+    let ignore = false;
+    async function init() {
+      try {
+        const res = await fetch(`/api/aqi?lat=${selectedCity.lat}&lon=${selectedCity.lon}&city=${encodeURIComponent(selectedCity.name)}`);
+        const data = await res.json();
+        if (!ignore) {
+          setAqiData(data);
+          generateRecommendations(data);
+        }
+      } catch (err) {
+        console.error("Init AQI error", err);
+      }
+    }
+    init();
+    return () => {
+      ignore = true;
+    };
+  }, [selectedCity.lat, selectedCity.lon, selectedCity.name, generateRecommendations]);
 
   const handleCitySelect = (city: PresetCity) => {
     setSelectedCity(city);

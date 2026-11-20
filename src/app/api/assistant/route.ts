@@ -105,11 +105,18 @@ User's Specific Question or Situation: ${userQuery || "How can my family navigat
   }
 }
 
+interface FamilyProfile {
+  hasKids?: boolean;
+  hasElderly?: boolean;
+  hasAsthma?: boolean;
+  petOwner?: boolean;
+}
+
 function generateSmartAssistantFallback(
   city: string,
   aqi: number,
   level: string,
-  profile: any,
+  profile: FamilyProfile | undefined,
   lifestyle: string,
   query: string
 ) {
