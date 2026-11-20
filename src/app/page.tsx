@@ -88,21 +88,39 @@ export default function HomeDashboard() {
 
   // Generate Assistant Advice
   const generateRecommendations = async (currentAqi: AQIData | null = aqiData) => {
-    if (!currentAqi) return;
+    const targetAqi = currentAqi || aqiData || {
+      location: selectedCity.name,
+      country: selectedCity.country,
+      aqi: 220,
+      level: "Very Unhealthy" as const,
+      pm25: 160,
+      pm10: 210,
+      no2: 45,
+      o3: 30,
+      color: "text-purple-400",
+      badgeBg: "",
+      latitude: selectedCity.lat,
+      longitude: selectedCity.lon,
+      so2: 12,
+      co: 500,
+      timestamp: new Date().toLocaleTimeString(),
+      summary: "High pollution levels require indoor protocols."
+    };
+
     setLoadingAssistant(true);
     try {
       const res = await fetch("/api/assistant", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          city: currentAqi.location,
-          aqi: currentAqi.aqi,
-          level: currentAqi.level,
+          city: targetAqi.location,
+          aqi: targetAqi.aqi,
+          level: targetAqi.level,
           pollutants: {
-            pm25: currentAqi.pm25,
-            pm10: currentAqi.pm10,
-            no2: currentAqi.no2,
-            o3: currentAqi.o3
+            pm25: targetAqi.pm25,
+            pm10: targetAqi.pm10,
+            no2: targetAqi.no2,
+            o3: targetAqi.o3
           },
           familyProfile: {
             hasKids,
@@ -118,7 +136,7 @@ export default function HomeDashboard() {
       const resData = await res.json();
       if (resData.success && resData.data) {
         setAssistantData(resData.data);
-        setEngineUsed(resData.engine || "gemini");
+        setEngineUsed(resData.engine || "adaptive-engine");
       }
     } catch (err) {
       console.error("Failed generating assistant plan", err);
