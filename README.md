@@ -1,36 +1,55 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# AuraClean AI — Urban Air Quality & Winter Smog Assistant
+> **PromptWars — Challenge 6 Solution**
 
-## Getting Started
+A GenAI-powered assistant tailored to help families and urban communities navigate severe winter smog and urban air pollution. The application suggests low-emission daily routines, indoor air quality hacks, and sustainable alternatives tailored to location and lifestyle, while clearly calculating and explaining the direct impact of individual and community choices.
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## 🌟 Key Features
+
+1. **Real-time Live Atmospheric & AQI Monitor**:
+   - Queries Open-Meteo Air Quality API with real-time US AQI, PM2.5, PM10, NO2, and Ozone levels.
+   - Quick-switch presets for severe winter smog hotspots (Delhi, Lahore, Beijing, Ulaanbaatar, London, New York) and custom city searches.
+
+2. **Personalized GenAI Daily Routine & Transit Planner**:
+   - Dynamic schedule suggestions across morning, mid-day, and evening inversion windows.
+   - Recommends low-emission transit alternatives (Metro, carpool, EVs, remote work) to avoid personal emissions during thermal traps.
+
+3. **Budget-Friendly Indoor Air Quality (IAQ) Hacks**:
+   - Step-by-step guidance on DIY Corsi-Rosenthal boxes (MERV-13 filters + box fans).
+   - Inversion timing protocols (ventilating only during midday solar convection windows).
+   - Wet-mopping techniques to prevent toxic particulate resuspension.
+
+4. **Family Demographic Protection Shield**:
+   - Dedicated guidance for vulnerable family profiles (infants & children, seniors with cardiovascular risk, asthma/respiratory conditions, pets).
+
+5. **Direct Impact Meter**:
+   - Quantified CO2 prevented (kg), particulate matter prevented (g), and personal lung exposure reduction (%).
+   - Demonstrates the collective ripple effect of community compliance.
+
+---
+
+## 🚀 Getting Started
+
+### 1. Environment Configuration
+The `.env.local` file is already configured with your key:
+```env
+GEMINI_API_KEY=your_key_here
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. Run the Development Server
+```bash
+npm run dev
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 🛠 Tech Stack
+- **Framework**: Next.js 14 / App Router (TypeScript)
+- **Styling**: Tailwind CSS
+- **Icons**: Lucide React
+- **API**: Next.js Serverless Route Handlers
+- **AI Models**: Google Gemini 1.5 Flash + Contextual Heuristic Adaptive Engine
+- **Data Source**: Open-Meteo Air Quality Open Data API
